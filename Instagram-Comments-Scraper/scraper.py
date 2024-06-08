@@ -18,10 +18,10 @@ to use something different to use that link through Python Selenium. Either we c
 or name selectors to use that.
 """
 username=driver.find_element(By.NAME,"username")
-username.send_keys ('forminingpurpose')
+username.send_keys ('dan.den.don_')
 
 password =driver.find_element (By.NAME,"password")
-password.send_keys('anjaymabar')
+password.send_keys('danish')
 password.submit()
 
 
@@ -37,13 +37,13 @@ time.sleep(4)
 
 # load "sys.argv[2]" comments 
 try:
-    load_more_comment = driver.find_element(By.XPATH,'/html/body/div[2]/div/div/div[2]/div/div/div/div[1]/div[1]/div[2]/section/main/div/div[1]/div/div[2]/div/div[2]/div/div/ul/li/div/button')
+    load_more_comment = driver.find_element(By.CLASS_NAME, "x9f619 xjbqb8w x78zum5 x168nmei x13lgxp2 x5pf9jr xo71vjh xdj266r xat24cr x1n2onr6 x1plvlek xryxfnj x1c4vz4f x2lah0s xdt5ytf xqjyukv x1qjc9v5 x1oa3qoh xl56j7k")
     print("Found {}".format(str(load_more_comment)))
     i = 0
     while load_more_comment.is_displayed() and i < int(sys.argv[2]):
         load_more_comment.click()
         time.sleep(7)
-        load_more_comment = driver.find_element(By.XPATH,'/html/body/div[2]/div/div/div[2]/div/div/div/div[1]/div[1]/div[2]/section/main/div/div[1]/div/div[2]/div/div[2]/div/div/ul/li/div/button')
+        load_more_comment = driver.find_element(By.CLASS_NAME, 'x9f619 xjbqb8w x78zum5 x168nmei x13lgxp2 x5pf9jr xo71vjh xdj266r xat24cr x1n2onr6 x1plvlek xryxfnj x1c4vz4f x2lah0s xdt5ytf xqjyukv x1qjc9v5 x1oa3qoh xl56j7k')
         print(i)
         print("Found {}".format(str(load_more_comment)))
         i += 1
