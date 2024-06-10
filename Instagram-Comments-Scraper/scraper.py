@@ -1,67 +1,79 @@
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import sys
 import time
-import excel_exporter  # Assuming this is a custom module for exporting to Excel
+import sys
+from selenium.webdriver.common.by import By
 
-# Initialize Chrome WebDriver
 driver = webdriver.Chrome()
 
-# Open Instagram login page
-driver.get("https://www.instagram.com/accounts/login/")
+url = "https://www.instagram.com/"
+
+driver.get(url)
+
 time.sleep(2)
 
-# Log in with your credentials
+"""
+On the first project of me which we entered Twitter without using password,we use XPaths of
+elements but in Instagram,when we refresh our website,id number of login url changes so we need
+to use something different to use that link through Python Selenium. Either we can choose class name
+or name selectors to use that.
+"""
 username = driver.find_element(By.NAME, "username")
-username.send_keys("dan.den.don_")  # Replace with your actual username
+username.send_keys("dan.den.don_")
+
 password = driver.find_element(By.NAME, "password")
-password.send_keys("danish")  # Replace with your actual password
+password.send_keys("danish")
 password.submit()
 
-time.sleep(10)  # Adjust as needed based on network speed and page load times
 
-# Open the Instagram post URL passed as an argument
+time.sleep(10)
+
+
 driver.get(sys.argv[1])
+
 time.sleep(4)
 
-# Load comments
-try:
-    # Use a more robust CSS selector for the "Load more comments" button
-    load_more_comment = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located(
-            (By.CSS_SELECTOR, ".XQXOT.pafy4.rhwb6.LFGsT._4EzTm")
-        )
-    )
+ululan = driver.find_element(By.CLASS_NAME, "_a9z6")
 
+# "/html/body/div[2]/div/div/div[2]/div/div/div/div[1]/div[1]/div[2]/section/main/div/div[1]/div/div[2]/div/div[2]/div/div/ul/li/div/button",
+# load "sys.argv[2]" comments
+try:
+    load_more_comment = ululan.find_element(
+        By.CLASS_NAME,
+        "_abl-",
+    )
+    print("Found {}".format(str(load_more_comment)))
     i = 0
     while load_more_comment.is_displayed() and i < int(sys.argv[2]):
         load_more_comment.click()
-        time.sleep(7)
-        load_more_comment = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located(
-                (By.CSS_SELECTOR, ".XQXOT.pafy4.rhwb6.LFGsT._4EzTm")
-            )
+        time.sleep(10)
+        load_more_comment = ululan.find_element(
+            By.CLASS_NAME,
+            "_abl-",
         )
-        print("Loaded more comments ", i)
+        print(i)
+        print("Found {}".format(str(load_more_comment)))
         i += 1
 except Exception as e:
     print(e)
+    pass
 
-# Extract usernames and comments
+
 user_names = []
 user_comments = []
-comments = driver.find_elements(By.CLASS_NAME, "_6lAjh")
-
-for comment in comments:
-    username = comment.find_element(By.CLASS_NAME, "sqdOP.yWX7d._8A5w5.ZIAjV")
-    content = comment.find_element(By.CLASS_NAME, "C4VMK").text.strip()
-    user_names.append(username.text)
+comment = driver.find_elements(By.CLASS_NAME, "_a9ym")
+for c in comment:
+    container = c.find_element(By.CLASS_NAME, "_a9zr")
+    name = container.find_element(By.CLASS_NAME, "_a9zc").text
+    content = container.find_element(By.CLASS_NAME, "_a9zs").text
+    content = content.replace("\n", " ").strip().rstrip()
+    user_names.append(name)
     user_comments.append(content)
+user_names.pop(0)
+user_comments.pop(0)
+print(user_names)
+print(user_comments)
+import excel_exporter
 
-# Assuming your export function is in excel_exporter module
 excel_exporter.export(user_names, user_comments)
 
-# Close the WebDriver session
 driver.close()
